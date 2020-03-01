@@ -1,0 +1,12 @@
+extends scaffold
+
+block content
+  form(action=authurl method="post" class="responsive-width mt-5")
+    div(class="entry")
+      label(for="username") Brukernavn:
+      input(class="form-control" type="text" id="username" name="username" autocomplete="username" required autofocus)
+    div(class="entry mt-2")
+      label(for="password") Passord:
+      input(class="form-control" type="password" id="password" name="password" autocomplete="current-password" required)
+    button(class="btn btn-primary btn-lg entry button btn-block mt-4" type="submit") Logg inn
+

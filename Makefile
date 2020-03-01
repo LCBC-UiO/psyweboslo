@@ -1,7 +1,7 @@
 BASEDIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-#include config.txt
+include config.txt
 
-all: 3rdparty www/css/bootstrap.min.css
+all: 3rdparty app/css/bootstrap.min.css nodejs.simg
 
 .PHONY: 3rdparty
 3rdparty:
@@ -11,18 +11,16 @@ all: 3rdparty www/css/bootstrap.min.css
 distclean:
 	$(MAKE) -C 3rdparty clean
 
-
-
-PORT := 8080
-
-LIGHTTPD_BIN     := $(shell pwd)/3rdparty/lighttpd/sbin/lighttpd
-LOG_DIR := $(shell pwd)/srv/log
-
 www/css/bootstrap.min.css:
 	mkdir -p www/css/
 	cat 3rdparty/bootstrap.min.css.gz | gunzip > www/css/bootstrap.min.css
 
+nodejs.simg: Dockerfile
+	./build_from_dockerfile.sh nodejs
+
 .PHONY: run
 run: all
-	PORT=$(PORT) srv/lighttpd_gen_config.sh > /tmp/$(USER)_lighttpd.conf && \
-	$(LIGHTTPD_BIN) -D -f /tmp/$(USER)_lighttpd.conf
+	cd app \
+		&& singularity exec ../nodejs.simg npm install \
+		&& node_modules/nodemon/bin/nodemon.js main.js
+

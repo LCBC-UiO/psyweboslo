@@ -1,0 +1,11 @@
+extends scaffold
+
+block content
+  div(class="mt-5")
+    h2 Choose a test
+    hr
+    div(class="responsive-width")
+      each experiment in experiments
+        button(class="btn btn-lg entry button btn-block my-3 btn-primary" onclick="location.href='"+experiment.url+"'" ) #{experiment.name}
+    hr
+  button(class="btn btn-primary btn-lg entry button my-3" onclick="location.href='../'" ) Back

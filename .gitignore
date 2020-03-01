@@ -3,3 +3,6 @@ data/*
 !3rdparty/Makefile
 !3rdparty/make_*.mk
 
+nodejs.simg
+out/*
+experiments/*
