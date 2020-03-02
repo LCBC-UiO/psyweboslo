@@ -111,21 +111,6 @@ app.get('/login_err', function(req, res){
   res.render('back', { messages : messages} );
 });
 
-// create application/x-www-form-urlencoded parser
-
-// //login page form data is posted here
-// app.post('/login', 
-//   urlencodedParser, 
-//   passport.authenticate('local', { failureRedirect: '/login_err' }), 
-//   function(req, res){
-//     console.log(req.body.username);
-//     req.session.username = req.body.username;
-//     res.redirect('/');
-//   }
-// );
-
-//------------------//
-
 
 app.get('/', function(req, res){
   res.render('main');
@@ -214,12 +199,14 @@ app.post('/test', isAuthenticated('/login'), urlencodedParser, function(req, res
 });
 
 
-
 function get_experiments_list() {
-  let files = fs.readdirSync(g_expdir).sort(); // read all experiment directories
+  // list all directories
+  const isDirectory = source => fs.lstatSync(source).isDirectory();
+  let files = fs.readdirSync(g_expdir)
+    .filter(name => isDirectory(path.join(g_expdir, name)))
+    .sort();
   return files;
 }
-
 
 
 function formatDateAsOutDir(date) {
