@@ -3,6 +3,7 @@ var g_expdir = "../experiments";
 var g_restmpdir = '../out/results_tmp';
 var g_resultdir = '../out/results';
 
+
 const argv = require('yargs').argv;
 const express = require('express');
 const app = express();
@@ -13,6 +14,9 @@ const pug = require('pug');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const dotenv = require('dotenv').config({ path: '../config.txt' })
+
+const nettsjema = require('./nettskjema');
+
 
 // make env vars available in pug
 app.locals.env = process.env
@@ -129,22 +133,43 @@ app.get('/exp_list', isAuthenticated('/login'), function(req, res) {
 });
 
 
+const nettsjemaId = 141929;
 
 app.post('/save', isAuthenticated('/login'), urlencodedParser, function(req, res){
   // we are parsing the dir name of the experiment from the url
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
-  let dirname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');
-  write_results(req.body.results, req.session.username, dirname);
-  res.render('main');
+  let taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');
+  const json = req.body.results;
+  const subj_id = req.session.username;
+  // write results
+  var date = new Date()
+  datestr = date.toISOString().replace(/:/g, '.');
+  let filename = taskname + "_" + subj_id + "_" + datestr + ".json";
+  var restmp_fn = path.join(__dirname, g_restmpdir, filename);
+  fs.writeFile(restmp_fn, json, 'utf8',  function() {
+    console.log(`created file ${restmp_fn}`);
+    let out = new Map();
+    out["subj_id"] = subj_id;
+    out["timestamp"] = date.toISOString();
+    out["experiment_id"] = taskname;
+    out["data_json"] = json;
+    nettsjema.upload(nettsjemaId, out).then( () => {
+      // move results to final output dir
+      outdir = path.join(__dirname, g_resultdir, formatDateAsOutDir(date))
+      if (!fs.existsSync(outdir)){
+        fs.mkdirSync(outdir);
+      }
+      fs.renameSync(restmp_fn, path.join(outdir, filename));
+      res.render('save_ok');
+      return;
+    }).catch(err => { 
+      console.log(`error: nettskjema not uploaded\n${err}`);
+      res.render('save_err', { messages: [ err ] });
+      return;
+    });
+  });
 });
 
-
-
-
-// app.get('/', isAuthenticated('/login'), function(req, res){
-//   let compltasks = getCompletedTasks(req.session.username, tasks);
-//   res.render('menu', {tasks: compltasks, messages: []});
-// });
 
 app.get('/wordlist', isAuthenticated('/login'), function(req, res){
   let taskindex = parseInt(req.query.taskindex, 10);
@@ -215,21 +240,4 @@ function formatDateAsOutDir(date) {
   if (month.length < 2) 
       month = '0' + month;
   return [year, month].join('-');
-}
-
-function write_results(json, subj_id, taskname) {
-  // write results
-  var date = new Date()
-  datestr = date.toISOString().replace(/:/g, '.');
-  let filename = taskname + "_" + subj_id + "_" + datestr + ".json";
-  var restmp_fn = path.join(__dirname, g_restmpdir, filename);
-  fs.writeFile(restmp_fn, JSON.stringify(json), 'utf8',  function() {
-    console.log(`created file ${restmp_fn}`);
-    // move results to final output dir
-    outdir = path.join(__dirname, g_resultdir, formatDateAsOutDir(date))
-    if (!fs.existsSync(outdir)){
-      fs.mkdirSync(outdir);
-    }
-    fs.renameSync(restmp_fn, path.join(outdir, filename));
-  });
 }
