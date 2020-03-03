@@ -40,7 +40,7 @@ form.submit();
 
 ```
 
-#-----------------------
+#------------------------------------------------------------------------------
 
 # install packages
 
@@ -55,6 +55,8 @@ sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
   netcat-traditional \
   python-certbot-nginx
 
+#------------------------------------------------------------------------------
+
 # configure webserver
 
 sudo tee /etc/nginx/sites-available/default << EOI
@@ -68,15 +70,21 @@ server {
 EOI
 sudo service nginx restart
 
+#------------------------------------------------------------------------------
+
 # configure SSL
 
 sudo certbot --nginx -d psyweboslo.lolcat.no -m flo.krull@gmail.com
+
+#------------------------------------------------------------------------------
 
 # install pm2
 
 sudo npm install pm2 -g
 # from "pm2 startup":
 sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u debian --hp /home/debian
+
+#------------------------------------------------------------------------------
 
 # install psyweboslo
 
