@@ -2,7 +2,7 @@
   "name": "psyweboslo-srv",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "psyweb.js",
   "dependencies": {
     "del": "^5.1.0",
     "multer": "^1.4.2",
