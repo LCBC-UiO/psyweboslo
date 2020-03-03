@@ -1,0 +1,14 @@
+extends scaffold
+
+block content
+  div(class="mt-5")
+    p(style="font-size:50px") &#x26A0
+      div(class="row align-items-center h-100")
+        div(class="col-6 mx-auto")
+          div(class="mb-4")
+              div(class="alert alert-warning") Remove experiment '#{ experiment_id }'?
+    div(class="row align-items-center h-100")
+      div(class="col-3 ml-auto")
+        button(class="btn btn-secondary btn-block btn-lg entry button my-3" onclick=`location.href='${back_url !== undefined ? back_url : "/"}'` ) Back
+      div(class="col-3 mr-auto")
+        button(class="btn btn-danger    btn-block btn-lg entry button my-3" onclick=`location.href='/remove_experiment?id=${experiment_id}'` ) Remove

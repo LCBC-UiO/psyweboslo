@@ -1,0 +1,42 @@
+extends scaffold
+
+block content
+  div(class="mt-5")
+    h2 Admin menu
+    hr
+    form(action="/upload_experiment" enctype="multipart/form-data" method="POST")
+      input(type="file" name="experiment_zip" accept=".zip")
+      input(type="submit" value="Upload experiment")
+    hr
+    each experiment_id in experiment_ids
+      .row
+        .col-md-2
+        .col-md-8.mb-3
+          .input-group
+            input.form-control(type="text" value=experiment_id aria-describedby="basic-addon2" readonly)
+            .input-group-append
+              button.btn.btn-primary(onclick=`location.href='confirm_remove_experiment?id=${experiment_id}'`) Remove
+        .col-md-2
+    hr
+
+
+
+
+
+
+
+
+
+
+
+
+  //-   div(class="responsive-width")
+  //-     form(action="/uploadfile" enctype="multipart/form-data" method="POST")
+  //-     label.btn.btn-primary.btn-file.btn-lg.btn-block Upload experiment
+  //-       input(id="browse" name="experiment_zip" type="file" accept=".zip" style="display: none;")
+  //-   hr
+  //- button(class="btn btn-primary btn-lg entry button my-3" onclick="location.href='/'" ) Back
+  //- script.
+  //-   document.querySelector("#browse").addEventListener('change', function() {
+  //-     document.querySelector("form").submit();
+  //-   });
