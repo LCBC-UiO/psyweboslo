@@ -30,21 +30,19 @@ form.submit();
 ```
 
 ## TODO
-  * install server
-    * nginx
-    * certbot
-    * freedns
   * login / admin / dev accounts
+  * flow - sequence of pages (list -> exp -> send -> list)
+  * configuration 
+    * https://nettskjema.no/user/form/submission/show-all.html?id=141929
 
 
-## 
- * flow - sequence of pages (list -> exp -> send -> list)
+## Server setup
 
+```
 
-https://nettskjema.no/user/form/submission/show-all.html?id=141929
+#-----------------------
 
-
-##
+# install packages
 
 sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
   nodejs \
@@ -57,7 +55,7 @@ sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
   netcat-traditional \
   python-certbot-nginx
 
-
+# configure webserver
 
 sudo tee /etc/nginx/sites-available/default << EOI
 server {
@@ -70,14 +68,20 @@ server {
 EOI
 sudo service nginx restart
 
+# configure SSL
 
 sudo certbot --nginx -d psyweboslo.lolcat.no -m flo.krull@gmail.com
 
-
+# install pm2
 
 sudo npm install pm2 -g
-git clone https://github.com/f-krull/psyweboslo
+# from "pm2 startup":
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u debian --hp /home/debian
 
+# install psyweboslo
+
+git clone https://github.com/f-krull/psyweboslo
 cd psyweboslo/app
 npm install
-pm2 start main.js
+pm2 start psyweb.js
+```
