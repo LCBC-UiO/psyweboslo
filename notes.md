@@ -34,12 +34,50 @@ form.submit();
     * nginx
     * certbot
     * freedns
-  * local dev env
-    * check uploded form (code shared with remote server)
-  * upload zip?
   * login / admin / dev accounts
-
 
 
 ## 
  * flow - sequence of pages (list -> exp -> send -> list)
+
+
+https://nettskjema.no/user/form/submission/show-all.html?id=141929
+
+
+##
+
+sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+  nodejs \
+  npm \
+  locales \
+  nginx \
+  certbot \
+  git \
+  bash-completion \
+  netcat-traditional \
+  python-certbot-nginx
+
+
+
+sudo tee /etc/nginx/sites-available/default << EOI
+server {
+	root /var/www/html;
+  server_name psyweboslo.lolcat.no;
+  location / {
+    proxy_pass http://127.0.0.1:9080/;
+  }
+}
+EOI
+sudo service nginx restart
+
+
+sudo certbot --nginx -d psyweboslo.lolcat.no -m flo.krull@gmail.com
+
+
+
+sudo npm install pm2 -g
+git clone https://github.com/f-krull/psyweboslo
+
+cd psyweboslo/app
+npm install
+pm2 start main.js
