@@ -18,5 +18,5 @@ nodejs.simg: Dockerfile
 run: all
 	cd app \
 		&& singularity exec ../nodejs.simg npm install \
-		&& node_modules/nodemon/bin/nodemon.js main.js
+		&& node_modules/nodemon/bin/nodemon.js psyweb.js
 
