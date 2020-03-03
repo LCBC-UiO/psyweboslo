@@ -1,0 +1,15 @@
+html,
+body {
+  height: 100%;
+}
+
+.cover-container {
+  max-width: 42em;
+}
+
+.responsive-width {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}

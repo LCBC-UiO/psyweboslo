@@ -1,0 +1,17 @@
+extends scaffold_dev
+
+block content
+  div(class="mt-5")
+    h2 List of experiments
+    hr.mb-4
+    each experiment in experiments
+      .row
+        .col-md-2
+        .col-md-8.mb-3
+          .input-group
+            input.form-control(type="text" value=experiment.name aria-describedby="basic-addon2" readonly)
+            .input-group-append
+              button.btn.btn-primary(onclick=`location.href='${experiment.url}'`) Test
+              button.btn.btn-primary(onclick=`location.href='export?name=${experiment.name}'`) Export
+        .col-md-2
+    hr
