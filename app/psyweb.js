@@ -91,22 +91,20 @@ app.use(
   ]
 )
 
-
 //------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 // login
 
+app.get('*', function(req, res, next) {
+  res.locals.logged_in = (req.session.username !== undefined) ? true : false;
+  next();
+});
 app.get('/login', function(req, res){
   res.render('login', { messages : [], authurl: '/login'});
 });
 
-app.post('/login', 
-  urlencodedParser,
-  function(req, res){
+app.post('/login', urlencodedParser, function(req, res) {
     let ok = true;
     ok = ok && req.body.password !== undefined;
     ok = ok && req.body.username !== undefined;
@@ -116,9 +114,19 @@ app.post('/login',
       return;
     }
     req.session.username = req.body.username;
+    if (req.session.username == "admin") {
+      res.redirect('/admin');
+      return;
+    }
     res.redirect('/exp_list');
   }
 );
+
+app.get('/logout', function(req, res){
+  req.session.username = undefined;
+  res.redirect('/');
+});
+
 
 //------------------------------------------------------------------------------
 

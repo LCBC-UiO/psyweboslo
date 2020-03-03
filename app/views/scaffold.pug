@@ -7,8 +7,16 @@ html(lang='en')
     link(rel="stylesheet" href="css/main.css" type="text/css")
     link(rel="shortcut icon" href="img/favicon.ico" type="image/x-icon")
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-  body(class="text-center")
-    div(class="container")
+  body
+    nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+      a(class="navbar-brand" href="/") PsyWeb Oslo
+      if (logged_in)
+        ul.navbar-nav.ml-auto
+          li
+            a(href="/logout")
+              span.glyphicon.glyphicon-log-in Logout
+      
+    div(class="container text-center")
       div(class="text-center d-flex h-100 p-3 mx-auto flex-column"  style="max-width: 42em;")
         div(class="row mt-5")
           div(class="col-6")
