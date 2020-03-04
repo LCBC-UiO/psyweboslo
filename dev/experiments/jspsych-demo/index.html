@@ -97,6 +97,7 @@
     jsPsych.init({
       timeline: timeline,
       on_finish: function() {
+        // save in PsyDev Oslo:
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = "../../save";
