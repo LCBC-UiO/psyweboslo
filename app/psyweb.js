@@ -108,6 +108,8 @@ app.post('/login', urlencodedParser, function(req, res) {
     let ok = true;
     ok = ok && req.body.password !== undefined;
     ok = ok && req.body.username !== undefined;
+    const regex = /^[A-Za-z0-9]*$/;
+    ok = ok && req.body.username.match(regex);
     ok = ok && req.body.password == 123;
     if (!ok) {
       res.redirect('/login_err');
