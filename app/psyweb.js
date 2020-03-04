@@ -191,16 +191,15 @@ app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
   let taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');
   const json = req.body.results;
-  const subj_id = req.session.username;
   // write results
   var date = new Date()
   datestr = date.toISOString().replace(/:/g, '.');
-  let filename = taskname + "_" + subj_id + "_" + datestr + ".json";
+  let filename = taskname + "_" + req.session.subjid + "_" + datestr + ".json";
   var restmp_fn = path.join(__dirname, g_restmpdir, filename);
   fs.writeFile(restmp_fn, json, 'utf8',  function() {
     console.log(`created file ${restmp_fn}`);
     let out = new Map();
-    out["subj_id"] = subj_id;
+    out["subj_id"] = req.session.subjid;
     out["timestamp"] = date.toISOString();
     out["experiment_id"] = taskname;
     out["data_json"] = json;
