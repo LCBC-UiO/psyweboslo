@@ -151,8 +151,6 @@ app.get('/login_err', function(req, res){
 //------------------------------------------------------------------------------
 
 app.get('/username', urlencodedParser, function(req, res) {
-  if (req.session.subjid === undefined) {
-  }
   res.render('username');
 });
 
