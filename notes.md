@@ -1,42 +1,13 @@
-## upload results (`index.html`)
-
-```
-var xhr = new XMLHttpRequest();
-xhr.onload = function(e) {
-  console.log('success');
-  window.location.href = '../../exp_list';
-};
-xhr.open("POST", "../../save", true);
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.send(JSON.stringify( { url: window.location.pathname, results: results }));
-```
-
-```
-const form = document.createElement('form');
-form.method = 'POST';
-form.action = "../../save";
-const hiddenFieldUrl = document.createElement('input');
-hiddenFieldUrl.type = 'hidden';
-hiddenFieldUrl.name = "url";
-hiddenFieldUrl.value = window.location.pathname;
-form.appendChild(hiddenFieldUrl);
-const hiddenFieldResults = document.createElement('input');
-hiddenFieldResults.type = 'hidden';
-hiddenFieldResults.name = "results";
-hiddenFieldResults.value = JSON.stringify(results);
-form.appendChild(hiddenFieldResults);
-document.body.appendChild(form);
-form.submit();
-```
+# Notes
 
 ## TODO
   * login / admin / dev accounts
-  * flow - sequence of pages (list -> exp -> send -> list)
   * configuration 
     * https://nettskjema.no/user/form/submission/show-all.html?id=141929
 
-
 ## Server setup
+
+Starting from a Debian 10 base
 
 ```
 
@@ -45,14 +16,14 @@ form.submit();
 # install packages
 
 sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+  bash-completion \
+  git \
+  netcat-traditional \
+  locales \
   nodejs \
   npm \
-  locales \
   nginx \
   certbot \
-  git \
-  bash-completion \
-  netcat-traditional \
   python-certbot-nginx
 
 #------------------------------------------------------------------------------
