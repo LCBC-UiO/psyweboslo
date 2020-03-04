@@ -4,26 +4,20 @@ block content
   div(class="mt-5")
     p(style="font-size:50px") &#x2714
       div(class="row align-items-center h-100")
-        div(class="col-6 mx-auto")
+        div(class="col-md-6 mx-auto")
           div(class="mb-4")
             div(class="alert alert-success") Your experiment "#{experiment_name}" was submitted successfully.
     div(class="responsive-width")
-      button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick=`location.href='export?name=${experiment_name}'` ) Export
+      button(class="btn btn-primary btn-lg btn-block entry button my-3" id="dl-button") Download Results
+      button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick=`location.href='export?name=${experiment_name}'` ) Export experiment
       button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick="location.href='/'" ) Back
-
-
-
-//- download :
-
-//-             var data = "text/json;charset=utf-8," + JSON.stringify(results);
-//- -                     var a = document.createElement('a');
-//- -                     a.title = "Download"
-//- -                     a.id = "download"
-//- -                     a.type = "button"
-//- -                     a.download = 'brief-self-control-survey_result.json';
-//- -                     a.href = 'data:' + data;
-//- -                     $(".submit").html("Download")
-//- -                     $(".submit").click(function(){
-//- -                         $("body").append(a)
-//- -                         a.click()
-//- -                     })
+      a(id="dl-helper" style="display:none")
+  script.
+    console.log(JSON.stringify(!{json}));
+    document.getElementById('dl-button').addEventListener('click', (e) => {
+      const dataStr = "data:text/json;charset=utf-8," + JSON.stringify(!{json});
+      var dlHelper = document.getElementById('dl-helper');
+      dlHelper.setAttribute("href",     dataStr);
+      dlHelper.setAttribute("download", "psyweboslo_#{experiment_name}.json");
+      dlHelper.click();
+    });

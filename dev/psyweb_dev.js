@@ -83,13 +83,13 @@ app.post('/save', urlencodedParser, function(req, res){
     }
     const taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');
     // json provided?
-    const json = req.body.results;
-    if (json === undefined) {
+    const json_str = req.body.results;
+    if (json_str === undefined) {
       messages = [ `Field "results" is missing in response from '${taskname}'.` ];
       break;
     }
     try {
-      JSON.parse(json);
+      JSON.parse(json_str);
     } catch(e) {
       messages = [ 
         `Field "results" is not in JSON format (from '${taskname}').`
@@ -102,7 +102,8 @@ app.post('/save', urlencodedParser, function(req, res){
       messages = [ `Experiment '${taskname}' not found (most likely an internal error).` ];
       break;
     }
-    res.render('save_ok', { experiment_name: taskname });
+    console.log(json_str);
+    res.render('save_ok', { experiment_name: taskname, json: json_str });
     return;
   }
   res.render('err', { messages: messages });
