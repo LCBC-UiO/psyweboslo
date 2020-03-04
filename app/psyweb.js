@@ -211,6 +211,8 @@ app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
         fs.mkdirSync(outdir);
       }
       fs.renameSync(restmp_fn, path.join(outdir, filename));
+      // reset subjid - workaround
+      req.session.destroy();
       res.render('ok', { messages: [ "Your data has been uploaded." ] });
       return;
     }).catch(err => { 
