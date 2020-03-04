@@ -49,14 +49,29 @@ http.listen(httpPort, () => {
 
 //------------------------------------------------------------------------------
 
-var isAuthenticated = () => function(req, res, next) {
-  if (req.session.username === undefined) {
-    res.redirect('/login');
+var requireSubjId = () => function(req, res, next) {
+  while (true) {
+    // provided in url?
+    const regex = /^[A-Za-z0-9]{4,}$/;
+    var ok = true;
+    ok = ok && req.query.uid !== undefined;
+    ok = ok && req.query.uid.match(regex);
+    if (ok) {
+      req.session.subjid = req.query.uid;
+      break;
+    }
+    // already set?
+    if (req.session.subjid !== undefined) {
+      break;
+    }
+    // no subjid -> redirect
+    res.redirect('/username');
     return;
   }
   return next();
 }
-var isAdmin = () => function(req, res, next) {
+
+var requireAdmin = () => function(req, res, next) {
   if (req.session.username != "admin") {
     res.redirect('/login');
     return;
@@ -86,7 +101,7 @@ app.use(
   ]
 )
 app.use(
-  '/exp', isAuthenticated(), [ 
+  '/exp', requireSubjId(), [ 
     express.static(path.join(__dirname, g_expdir))
   ]
 )
@@ -108,19 +123,15 @@ app.post('/login', urlencodedParser, function(req, res) {
     let ok = true;
     ok = ok && req.body.password !== undefined;
     ok = ok && req.body.username !== undefined;
-    const regex = /^[A-Za-z0-9]*$/;
-    ok = ok && req.body.username.match(regex);
+    ok = ok && req.body.username == "admin"; // only admin for now
     ok = ok && req.body.password == 123;
     if (!ok) {
       res.redirect('/login_err');
       return;
     }
-    req.session.username = req.body.username;
-    if (req.session.username == "admin") {
-      res.redirect('/admin');
-      return;
-    }
-    res.redirect('/exp_list');
+    req.session.username = "admin";
+    res.redirect('/admin');
+    return;
   }
 );
 
@@ -139,13 +150,21 @@ app.get('/login_err', function(req, res){
 
 //------------------------------------------------------------------------------
 
+app.get('/username', urlencodedParser, function(req, res) {
+  if (req.session.subjid === undefined) {
+  }
+  res.render('username');
+});
+
+//------------------------------------------------------------------------------
+
 app.get('/', function(req, res) {
   res.render('main');
 });
 
 //------------------------------------------------------------------------------
 
-app.get('/exp_list', isAuthenticated(), function(req, res) {
+app.get('/exp_list', requireSubjId(), function(req, res) {
   let experiment_dirs = get_experiments_list();
   let experiments = experiment_dirs.map( function(dir) {
     return {
@@ -156,10 +175,19 @@ app.get('/exp_list', isAuthenticated(), function(req, res) {
   res.render('exp_list', { experiments: experiments });
 });
 
+//------------------------------------------------------------------------------
+
+app.get('/start', requireSubjId(), function(req, res) {
+  if (req.query.eid !== undefined) {
+    res.redirect(`exp/${req.query.eid}/index.html`);
+    return;
+  }
+  res.render('err', { messages: [ "Experiment ID (eid) was not defined in URL." ] });
+});
 
 //------------------------------------------------------------------------------
 
-app.post('/save', isAuthenticated(), urlencodedParser, function(req, res) {
+app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
   const nettsjemaId = app.locals.env.NETTSKJEMAID;
   // we are parsing the dir name of the experiment from the url
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
@@ -197,7 +225,7 @@ app.post('/save', isAuthenticated(), urlencodedParser, function(req, res) {
 
 //------------------------------------------------------------------------------
 
-app.get('/admin', isAdmin(), function(req, res) {
+app.get('/admin', requireAdmin(), function(req, res) {
   let experiment_dirs = get_experiments_list();
   res.render('admin', { experiment_ids: experiment_dirs });
 });
@@ -230,13 +258,13 @@ app.post('/upload_experiment', upload.single('experiment_zip'), async (req, res)
 //------------------------------------------------------------------------------
 
 
-app.get('/confirm_remove_experiment', isAdmin(), function(req, res) {
+app.get('/confirm_remove_experiment', requireAdmin(), function(req, res) {
   res.render('remove', { back_url: "/admin", experiment_id: req.query.id });
 });
 
 //------------------------------------------------------------------------------
 
-app.get('/remove_experiment', isAdmin(), async function(req, res) {
+app.get('/remove_experiment', requireAdmin(), async function(req, res) {
   var experiment_id = "undefined";
   try {
     experiment_id = req.query.id;
