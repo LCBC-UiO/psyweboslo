@@ -139,7 +139,7 @@ app.get('/login_err', function(req, res){
 
 //------------------------------------------------------------------------------
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   res.render('main');
 });
 
@@ -159,9 +159,8 @@ app.get('/exp_list', isAuthenticated(), function(req, res) {
 
 //------------------------------------------------------------------------------
 
-const nettsjemaId = 141929;
-
-app.post('/save', isAuthenticated(), urlencodedParser, function(req, res){
+app.post('/save', isAuthenticated(), urlencodedParser, function(req, res) {
+  const nettsjemaId = app.locals.env.NETTSKJEMAID;
   // we are parsing the dir name of the experiment from the url
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
   let taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');

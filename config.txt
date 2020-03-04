@@ -1,0 +1,2 @@
+WEBSERVERHOSTNAME="psyweboslo.lolcat.no"
+NETTSKJEMAID=141929
