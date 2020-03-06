@@ -20,3 +20,10 @@ run: all
 		&& singularity exec ../nodejs.simg npm install \
 		&& node_modules/nodemon/bin/nodemon.js psyweb.js
 
+.PHONY: publish_dev
+publish_dev:
+	bash dev/publish.sh
+
+distclean:
+	$(RM) -r dev/node_modules
+	$(RM) -r dev/export/*.zip
