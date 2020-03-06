@@ -58,7 +58,7 @@ Inside your jsPsych experiment, define the `on_finish` function in
 ```
   jsPsych.init({
     timeline: timeline,
-    on_finish: function() {
+    on_finish: function(data) {
       // save in PsyDev Oslo:
       const form = document.createElement('form');
       form.method = 'POST';
@@ -71,7 +71,7 @@ Inside your jsPsych experiment, define the `on_finish` function in
       const hiddenFieldResults = document.createElement('input');
       hiddenFieldResults.type = 'hidden';
       hiddenFieldResults.name = "results";
-      hiddenFieldResults.value = jsPsych.data.get().json();
+      hiddenFieldResults.value = JSON.stringify(data);
       form.appendChild(hiddenFieldResults);
       document.body.appendChild(form);
       form.submit();
