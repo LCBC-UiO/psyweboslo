@@ -2,6 +2,7 @@
 
 ## TODO
   * login / admin / dev accounts
+  * datasrv.org bioph.org unitent.org uniluma.org
   * configuration 
     * https://nettskjema.no/user/form/submission/show-all.html?id=141929
 
