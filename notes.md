@@ -12,6 +12,8 @@ Starting from a Debian 10 base
 
 ```
 
+server_name=psyweboslo.lolcat.no
+
 #------------------------------------------------------------------------------
 
 # install packages
@@ -33,8 +35,8 @@ sudo apt-get update && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
 
 sudo tee /etc/nginx/sites-available/default << EOI
 server {
-	root /var/www/html;
-  server_name psyweboslo.lolcat.no;
+  root /var/www/html;
+  server_name ${server_name};
   location / {
     proxy_pass http://127.0.0.1:9080/;
   }
@@ -46,7 +48,7 @@ sudo service nginx restart
 
 # configure SSL
 
-sudo certbot --nginx -d psyweboslo.lolcat.no -m flo.krull@gmail.com
+sudo certbot --nginx -d ${server_name} -m flo.krull@gmail.com
 
 #------------------------------------------------------------------------------
 
@@ -63,5 +65,8 @@ sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup sys
 git clone https://github.com/f-krull/psyweboslo
 cd psyweboslo/app
 npm install
+pm2 delete all || true
 pm2 start psyweb.js
+pm2 cleardump
+pm2 save
 ```
