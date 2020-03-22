@@ -206,7 +206,7 @@ app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
     nettsjema.upload(nettsjemaId, out).then( () => {
       // move results to final output dir
       outdir = path.join(__dirname, g_resultdir, formatDateAsOutDir(date))
-      if (!fs.existsSync(outdir)){
+      if (!fs.existsSync(outdir)) {
         fs.mkdirSync(outdir);
       }
       fs.renameSync(restmp_fn, path.join(outdir, filename));

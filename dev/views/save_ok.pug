@@ -16,7 +16,7 @@ block content
   script.
     console.log(JSON.stringify(!{json}));
     document.getElementById('dl-button').addEventListener('click', (e) => {
-      const dataStr = "data:text/json;charset=utf-8," + JSON.stringify(!{json});
+      const dataStr = "data:text/json;charset=utf-8," + !{json};
       var dlHelper = document.getElementById('dl-helper');
       dlHelper.setAttribute("href",     dataStr);
       dlHelper.setAttribute("download", "psyweboslo_#{experiment_name}.json");

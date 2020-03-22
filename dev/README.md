@@ -71,7 +71,7 @@ Inside your jsPsych experiment, define the `on_finish` function in
       const hiddenFieldResults = document.createElement('input');
       hiddenFieldResults.type = 'hidden';
       hiddenFieldResults.name = "results";
-      hiddenFieldResults.value = JSON.stringify(data);
+      hiddenFieldResults.value = JSON.stringify(data.json());
       form.appendChild(hiddenFieldResults);
       document.body.appendChild(form);
       form.submit();
