@@ -10,6 +10,7 @@ block content
     div(class="responsive-width")
       button(class="btn btn-primary btn-lg btn-block entry button my-3" id="dl-button") Download Results
       button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick=`location.href='export?name=${experiment_name}'` ) Export experiment
+      button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick=`location.href='/exp/${experiment_name}/index.html'` ) Restart
       button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick="location.href='/'" ) Back
       a(id="dl-helper" style="display:none")
   script.
