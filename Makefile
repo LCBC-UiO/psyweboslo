@@ -1,15 +1,10 @@
 BASEDIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 include config.txt
 
-all: 3rdparty nodejs.simg
-
-.PHONY: 3rdparty
-3rdparty:
-	$(MAKE) -C 3rdparty lighttpd_build
+all: nodejs.simg
 
 .PHONY: distclean
 distclean:
-	$(MAKE) -C 3rdparty clean
 
 nodejs.simg: Dockerfile
 	./build_from_dockerfile.sh nodejs
@@ -19,6 +14,10 @@ run: all
 	cd app \
 		&& singularity exec ../nodejs.simg npm install \
 		&& node_modules/nodemon/bin/nodemon.js psyweb.js
+
+run_dev: all
+	cd dev \
+		&& singularity exec ../nodejs.simg bash start.sh
 
 .PHONY: publish_dev
 publish_dev:
