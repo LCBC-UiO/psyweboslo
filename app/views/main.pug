@@ -4,8 +4,8 @@ block content
   div(class="cover-container d-flex h-100 p-3 mx-auto flex-column mt-5")
     header(class="masthead mb-auto")
     main(role="main" class="inner cover")
-      h1(class="cover-heading mb-5") PsyWeb Oslo
-      p(class="lead") Joint infrastructure to run psychological, web-based experiments for MoBa (FHI) and PSI.
+      h1(class="cover-heading mb-5") #{ env.BRANDSTR_SHORT }
+      p(class="lead") #{ env.INTROSTR }
       p(class="lead")
         a(href="exp_list" class="btn btn-lg btn-primary mt-3 mb-5") Start Experiment
   div(class="text-center d-flex h-100 p-3 mx-auto flex-column"  style="max-width: 42em;")

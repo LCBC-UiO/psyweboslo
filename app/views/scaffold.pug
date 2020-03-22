@@ -1,7 +1,7 @@
 doctype html
 html(lang='en')
   head
-    title PsyWeb Oslo
+    title #{ env.BRANDSTR_SHORT }
     meta(charset='utf-8')
     link(rel="stylesheet" href="css/bootstrap.min.css" type="text/css")
     link(rel="stylesheet" href="css/main.css" type="text/css")
@@ -9,7 +9,7 @@ html(lang='en')
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
   body
     nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
-      a(class="navbar-brand" href="/") PsyWeb Oslo
+      a(class="navbar-brand" href="/") #{ env.BRANDSTR_LONG }
       ul.navbar-nav.ml-auto
         if (logged_in)
           li
@@ -35,5 +35,5 @@ html(lang='en')
       block content
     footer(class="page-footer font-small blue mt-5")
       .footer-copyright.text-center.py-3 
-        a(href="https://psyweboslo.lolcat.no") #{ env.WEBSERVERHOSTNAME } 
+        a(href=`https://${env.WEBSERVERHOSTNAME}`) #{ env.WEBSERVERHOSTNAME } 
         span &copy; 2020

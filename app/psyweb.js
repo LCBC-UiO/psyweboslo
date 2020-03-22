@@ -13,7 +13,12 @@ const fs = require('fs');
 const pug = require('pug');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const dotenv = require('dotenv').config({ path: '../config.txt' })
+const dotenv = function() {
+  if (fs.existsSync("../config.txt")) {
+    return require('dotenv').config({ path: '../config.txt' })
+  }
+  return require('dotenv').config({ path: '../config_default.txt' })
+}();
 const multer  = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const unzipper = require('unzipper');
