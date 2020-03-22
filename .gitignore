@@ -4,3 +4,4 @@ data/*
 nodejs.simg
 out/*
 experiments/*
+config.txt
