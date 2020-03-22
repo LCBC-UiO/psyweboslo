@@ -217,7 +217,7 @@ app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
       fs.renameSync(restmp_fn, path.join(outdir, filename));
       // reset subjid - workaround
       req.session.destroy();
-      res.render('ok', { messages: [ "Your data has been uploaded." ] });
+      res.render('ok', { messages: [ "Test completed." ] });
       return;
     }).catch(err => { 
       console.log(`error: nettskjema not uploaded\n${err}`);
