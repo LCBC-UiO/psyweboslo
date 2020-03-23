@@ -23,6 +23,7 @@ const multer  = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const unzipper = require('unzipper');
 const del = require('del');
+const crypto = require('crypto');
 
 const nettsjema = require('./nettskjema');
 
@@ -190,7 +191,7 @@ app.get('/start', requireSubjId(), function(req, res) {
 
 //------------------------------------------------------------------------------
 
-app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
+app.post('/save', requireSubjId(), urlencodedParser, async function(req, res) {
   const nettsjemaId = app.locals.env.NETTSKJEMAID;
   // we are parsing the dir name of the experiment from the url
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
@@ -199,15 +200,23 @@ app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
   // write results
   var date = new Date()
   datestr = date.toISOString().replace(/:/g, '.');
+  // list dir
+  const taskpath = path.join(__dirname, g_expdir, taskname);
+  const taskmd5 = await get_dir_md5(taskpath);
+  const taskdate = fs.lstatSync(taskpath).mtime.toISOString();
+
   let filename = taskname + "_" + req.session.subjid + "_" + datestr + ".json";
   var restmp_fn = path.join(__dirname, g_restmpdir, filename);
-  fs.writeFile(restmp_fn, json, 'utf8',  function() {
+  let out = new Map();
+  out["subj_id"] = req.session.subjid;
+  out["timestamp"] = date.toISOString();
+  out["experiment_id"] = taskname;
+  out["experiment_md5"] = taskmd5;
+  out["experiment_date"] = taskdate;
+  out["info_json"] = "";
+  out["data_json"] = json;
+  fs.writeFile(restmp_fn, JSON.stringify(out), 'utf8',  function() {
     console.log(`created file ${restmp_fn}`);
-    let out = new Map();
-    out["subj_id"] = req.session.subjid;
-    out["timestamp"] = date.toISOString();
-    out["experiment_id"] = taskname;
-    out["data_json"] = json;
     nettsjema.upload(nettsjemaId, out).then( () => {
       // move results to final output dir
       outdir = path.join(__dirname, g_resultdir, formatDateAsOutDir(date))
@@ -345,3 +354,44 @@ function formatDateAsOutDir(date) {
       month = '0' + month;
   return [year, month].join('-');
 }
+
+//------------------------------------------------------------------------------
+
+function get_dir_md5(path) {
+  return new Promise( async (resolve, reject) => {
+    _list_files_dir(path, function(err, results) {
+      if (err) reject();
+      results.sort();
+      var md5sum = crypto.createHash('md5');
+      results.forEach( (e) => {
+        var data = fs.readFileSync(e);
+        md5sum.update(data);
+      });
+      resolve(md5sum.digest('hex'));
+    });
+  });
+}
+
+var _list_files_dir = function(dir, done) {
+  var results = [];
+  fs.readdir(dir, function(err, list) {
+    if (err) return done(err);
+    var i = 0;
+    (function next() {
+      var file = list[i++];
+      if (!file) return done(null, results);
+      file = path.resolve(dir, file);
+      fs.stat(file, function(err, stat) {
+        if (stat && stat.isDirectory()) {
+          _list_files_dir(file, function(err, res) {
+            results = results.concat(res);
+            next();
+          });
+        } else {
+          results.push(file);
+          next();
+        }
+      });
+    })();
+  });
+};
