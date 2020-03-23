@@ -130,7 +130,7 @@ app.post('/login', urlencodedParser, function(req, res) {
     ok = ok && req.body.password !== undefined;
     ok = ok && req.body.username !== undefined;
     ok = ok && req.body.username == "admin"; // only admin for now
-    ok = ok && req.body.password == 123;
+    ok = ok && req.body.password == app.locals.env.ADMINPW;
     if (!ok) {
       res.redirect('/login_err');
       return;
