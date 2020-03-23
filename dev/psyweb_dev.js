@@ -103,7 +103,7 @@ app.post('/save', urlencodedParser, async function(req, res){
       break;
     }
     console.log(json_str);
-    res.render('save_ok', { experiment_name: taskname, json: json_str });
+    res.render('save_ok', { experiment_name: taskname, json: JSON.stringify(json_str) });
     return;
   }
   res.render('err', { messages: messages });

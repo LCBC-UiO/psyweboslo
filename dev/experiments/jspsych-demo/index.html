@@ -108,7 +108,7 @@
         const hiddenFieldResults = document.createElement('input');
         hiddenFieldResults.type = 'hidden';
         hiddenFieldResults.name = "results";
-        hiddenFieldResults.value = JSON.stringify(data.json());
+        hiddenFieldResults.value = data.json();
         form.appendChild(hiddenFieldResults);
         document.body.appendChild(form);
         form.submit();

@@ -14,7 +14,7 @@ block content
       button(class="btn btn-primary btn-lg btn-block entry button my-3" onclick="location.href='/'" ) Back
       a(id="dl-helper" style="display:none")
   script.
-    console.log(JSON.stringify(!{json}));
+    console.log(!{json});
     document.getElementById('dl-button').addEventListener('click', (e) => {
       const dataStr = "data:text/json;charset=utf-8," + !{json};
       var dlHelper = document.getElementById('dl-helper');
