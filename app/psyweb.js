@@ -182,6 +182,9 @@ app.get('/exp_list', requireSubjId(), function(req, res) {
 //------------------------------------------------------------------------------
 
 app.get('/start', requireSubjId(), function(req, res) {
+  if (req.query.inf !== undefined) {
+    req.session.info_json = req.query.inf;
+  }
   if (req.query.eid !== undefined) {
     res.redirect(`exp/${req.query.eid}/index.html`);
     return;
@@ -213,7 +216,7 @@ app.post('/save', requireSubjId(), urlencodedParser, async function(req, res) {
   out["experiment_id"] = taskname;
   out["experiment_md5"] = taskmd5;
   out["experiment_date"] = taskdate;
-  out["info_json"] = "";
+  out["info_json"] = req.session.info_json;
   out["data_json"] = json;
   fs.writeFile(restmp_fn, JSON.stringify(out), 'utf8',  function() {
     console.log(`created file ${restmp_fn}`);
