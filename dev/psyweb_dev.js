@@ -81,7 +81,7 @@ app.post('/save', urlencodedParser, function(req, res){
       messages = [ `Field "url" is missing.` ];
       break;
     }
-    const taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');
+    const taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/[^\/]*.html$/g, '');
     // json provided?
     const json_str = req.body.results;
     if (json_str === undefined) {

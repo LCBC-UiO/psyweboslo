@@ -194,7 +194,7 @@ app.post('/save', requireSubjId(), urlencodedParser, function(req, res) {
   const nettsjemaId = app.locals.env.NETTSKJEMAID;
   // we are parsing the dir name of the experiment from the url
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
-  let taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/index.html$/g, '');
+  let taskname = req.body.url.replace(/^\/exp\//g, '').replace(/\/[^\/]*.html$/g, '');
   const json = req.body.results;
   // write results
   var date = new Date()
