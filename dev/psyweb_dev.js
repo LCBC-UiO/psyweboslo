@@ -59,8 +59,8 @@ app.use(
 
 //------------------------------------------------------------------------------
 
-app.get('/', function(req, res){
-  let experiment_dirs = get_experiments_list();
+app.get('/', async function(req, res) {
+  let experiment_dirs = await get_experiments_list();
   let experiments = experiment_dirs.map( function(dir) {
     return {
       name: dir,
@@ -72,7 +72,7 @@ app.get('/', function(req, res){
 
 //------------------------------------------------------------------------------
 
-app.post('/save', urlencodedParser, function(req, res){
+app.post('/save', urlencodedParser, async function(req, res){
   // we are parsing the dir name of the experiment from the url
   // ( "/exp/brief-self-control-survey/index.html" => "brief-self-control-survey" )
   while (true) {
@@ -98,7 +98,7 @@ app.post('/save', urlencodedParser, function(req, res){
     }
     // task is directory
     const task_dir = path.join(g_experimentdir, taskname)
-    if (!fs.existsSync(task_dir) || !fs.lstatSync(task_dir).isDirectory()) {
+    if (!fs.existsSync(task_dir) || ! await is_directory_or_link(task_dir)) {
       messages = [ `Experiment '${taskname}' not found (most likely an internal error).` ];
       break;
     }
@@ -132,11 +132,24 @@ app.get('/export', function(req, res){
 
 //------------------------------------------------------------------------------
 
-function get_experiments_list() {
+function is_directory_or_link(p) {
+  return new Promise( async (resolve, reject) => {
+    fs.lstat(p, function (err, stats) {
+      if (err) {
+        reject();
+      }
+      // get one level up and join symlink (expected to be relative)
+      p = stats.isSymbolicLink(p) ? path.join(path.dirname(p).split(path.sep).pop(), fs.readlinkSync(p)) : p;
+      resolve(fs.lstatSync(p).isDirectory());
+    });
+  });
+}
+
+async function get_experiments_list() {
   // list all directories
   const isDirectory = source => fs.lstatSync(source).isDirectory();
   let files = fs.readdirSync(g_experimentdir)
-    .filter(name => isDirectory(path.join(g_experimentdir, name)))
+    .filter( async function(name) { return await is_directory_or_link(path.join(g_experimentdir, name))})
     .sort();
   return files;
 }
