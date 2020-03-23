@@ -42,7 +42,12 @@ server {
   }
 }
 EOI
+
+# set "client_max_body_size 100M;" in http section of /etc/nginx/nginx.conf
+
 sudo service nginx restart
+
+
 
 #------------------------------------------------------------------------------
 
