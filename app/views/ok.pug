@@ -9,4 +9,7 @@ block content
             div(class="mb-4")
               for msg in messages
                 div(class="alert alert-success") #{ msg }
-    button(class="btn btn-primary btn-lg entry button my-3" onclick=`location.href='${back_url !== undefined ? back_url : "/"}'` ) Back
+    if ( back_url === undefined )
+      button(class="btn btn-primary btn-lg entry button my-3" onclick='location.href="/"' ) Back
+    else 
+      button(class="btn btn-primary btn-lg entry button my-3" onclick=`window.open('${back_url}','_self')` ) Back

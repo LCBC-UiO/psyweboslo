@@ -185,6 +185,10 @@ app.get('/start', requireSubjId(), function(req, res) {
   if (req.query.inf !== undefined) {
     req.session.info_json = req.query.inf;
   }
+  if (req.query.back !== undefined) {
+    req.session.back_url = req.query.back;
+  }
+  
   if (req.query.eid !== undefined) {
     res.redirect(`exp/${req.query.eid}/index.html`);
     return;
@@ -228,8 +232,9 @@ app.post('/save', requireSubjId(), urlencodedParser, async function(req, res) {
       }
       fs.renameSync(restmp_fn, path.join(outdir, filename));
       // reset subjid - workaround
+      const back_url = req.session.back_url;
       req.session.destroy();
-      res.render('ok', { messages: [ "Test completed." ] });
+      res.render('ok', { messages: [ "Test completed." ], back_url: back_url });
       return;
     }).catch(err => { 
       console.log(`error: nettskjema not uploaded\n${err}`);
