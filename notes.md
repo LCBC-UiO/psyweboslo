@@ -1,10 +1,6 @@
 # Notes
-
-## TODO
-  * login / admin / dev accounts
-  * datasrv.org bioph.org unitent.org uniluma.org
-  * configuration 
-    * https://nettskjema.no/user/form/submission/show-all.html?id=141929
+  * configuration:
+    * https://nettskjema.no/user/form/submission/show-all.html?id=144664
 
 ## Server setup
 
@@ -69,6 +65,7 @@ sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup sys
 
 git clone https://github.com/f-krull/psyweboslo
 cd psyweboslo/app
+make install
 npm install
 pm2 delete all || true
 pm2 start psyweb.js
