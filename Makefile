@@ -1,7 +1,10 @@
 BASEDIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 include config.txt
 
-all: nodejs.simg
+.PHONY: install
+install: app/themes/active
+
+all: nodejs.simg install
 
 .PHONY: distclean
 distclean:
@@ -18,6 +21,9 @@ run: all
 run_dev: all
 	cd dev \
 		&& singularity exec ../nodejs.simg bash start.sh
+
+app/themes/active:
+	cd app/themes/ && ln -s default active
 
 .PHONY: publish_dev
 publish_dev:

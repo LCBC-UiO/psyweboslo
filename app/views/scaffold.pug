@@ -1,7 +1,8 @@
+include ../themes/active/views/mixins.pug
 doctype html
 html(lang='en')
   head
-    title #{ env.BRANDSTR_SHORT }
+    +html_title
     meta(charset='utf-8')
     link(rel="stylesheet" href="css/bootstrap.min.css" type="text/css")
     link(rel="stylesheet" href="css/main.css" type="text/css")
@@ -9,7 +10,7 @@ html(lang='en')
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
   body
     nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
-      a(class="navbar-brand" href="/") #{ env.BRANDSTR_LONG }
+      +header_title
       ul.navbar-nav.ml-auto
         if (logged_in)
           li
@@ -24,14 +25,7 @@ html(lang='en')
               span.glyphicon.glyphicon-log-in Login
       
     div(class="container text-center")
-      div(class="text-center d-flex h-100 p-3 mx-auto flex-column"  style="max-width: 42em;")
-        div(class="row mt-4")
-          div(class="col-sm-6  mt-3")
-            a(href="https://www.fhi.no")
-              img(src="img/logo_fhi.png" style="width: 207; height: 42px;")
-          div(class="col-sm-6  mt-3")
-            a(href="https://www.sv.uio.no/psi/")
-              img(src="img/logo_psi.png" style="width: 302px; height: 42px;")
+      include ../themes/active/views/logos.pug
       block content
     footer(class="page-footer font-small blue mt-5")
       .footer-copyright.text-center.py-3 

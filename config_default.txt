@@ -1,7 +1,3 @@
 WEBSERVERHOSTNAME="psyweboslo.lolcat.no"
 NETTSKJEMAID=144664
-BRANDSTR_SHORT="PsyWeb Oslo"
-BRANDSTR_LONG="PsyWeb Oslo"
-INTROSTR="Joint infrastructure to run psychological, web-based experiments for MoBa (FHI) and PSI."
 ADMINPW=123
-

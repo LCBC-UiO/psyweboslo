@@ -5,3 +5,5 @@ nodejs.simg
 out/*
 experiments/*
 config.txt
+
+app/themes/active
