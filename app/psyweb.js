@@ -91,19 +91,19 @@ app.set('view engine', 'pug')
 app.set(
   'views', [
     path.join(__dirname, './views'), 
-    path.join(__dirname, './active/views/'),
+    path.join(__dirname, 'themes', './active/views/'),
   ]
 )
 app.use(
   '/img', [
     express.static(path.join(__dirname, './img')),
-    express.static(path.join(__dirname, './active/img/')),
+    express.static(path.join(__dirname, 'themes','./active/img/')),
   ]
 )
 app.use(
   '/css', [ 
     express.static(path.join(__dirname, './css')), 
-    express.static(path.join(__dirname, './active/css/')),
+    express.static(path.join(__dirname, 'themes', './active/css/')),
   ]
 )
 app.use(
